@@ -25,6 +25,7 @@ namespace AmateurLabs.CandyWrapper.Scr
                 configPath = "Data/config.txt";
 
             string executable = ((dataDirectoryExists) ? "Data/" : "") + filename + ".exe";
+            string arguments = "";
             bool handleDefault = true;
             bool handlePreview = false;
             bool handleSettings = false;
@@ -36,6 +37,7 @@ namespace AmateurLabs.CandyWrapper.Scr
                     string key = line.Substring(0, line.IndexOf('='));
                     string value = line.Substring(line.IndexOf('='));
                     if (key == "executable") executable = value;
+                    else if (key == "arguments") arguments = value;
                     else if (key == "handleDefault") handleDefault = value == "true";
                     else if (key == "handlePreview") handlePreview = value == "true";
                     else if (key == "handleSettings") handleSettings = value == "true";
@@ -55,6 +57,7 @@ namespace AmateurLabs.CandyWrapper.Scr
             if (!run) return;
             ProcessStartInfo info = new ProcessStartInfo(executable, string.Join(" ", args));
             info.WorkingDirectory = directory;
+            info.Arguments += " " + arguments;
             Process process = Process.Start(info);
             process.WaitForExit();
         }
